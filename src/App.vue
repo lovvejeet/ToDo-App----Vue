@@ -1,54 +1,3 @@
-<script setup>
-import { ref, onMounted, computed, watch } from "vue";
-
-const name = ref("");
-const todos = ref([]);
-const inputContent = ref("");
-const inputCategory = ref(null);
-
-//sorting todo  eg: new todo will be on top
-const todosAscending = computed(() =>
-  todos.value.sort((a, b) => b.createdAt - a.createdAt)
-);
-
-//storing name in localStorage
-watch(name, (newValue) => {
-  localStorage.setItem("name", newValue);
-});
-watch(
-  todos,
-  (newVal) => {
-    localStorage.setItem("todos", JSON.stringify(newVal));
-  },
-  {
-    deep: true,
-  }
-);
-//pulling values from localStorage to display
-onMounted(() => {
-  name.value = localStorage.getItem("name") || "";
-  todos.value = JSON.parse(localStorage.getItem("todos") || []);
-});
-
-//adding todo
-const addTodo = () => {
-  if (inputContent.value.trim() === "" || inputCategory.value === null) {
-    return;
-  }
-  todos.value.push({
-    content: inputContent.value,
-    category: inputCategory.value,
-    done: false,
-    createdAt: new Date().getTime(),
-  });
-  inputContent.value = "";
-  inputCategory.value = null;
-};
-const removeTodo = (todo) => {
-  todos.value = todos.value.filter((t) => t !== todo);
-};
-</script>
-
 <template>
   <main class="app">
     <section class="greeting">
@@ -114,3 +63,54 @@ const removeTodo = (todo) => {
     </section>
   </main>
 </template>
+
+<script>
+import { ref, onMounted, computed, watch } from "vue";
+
+const name = ref("");
+const todos = ref([]);
+const inputContent = ref("");
+const inputCategory = ref(null);
+
+//sorting todo  eg: new todo will be on top
+const todosAscending = computed(() =>
+  todos.value.sort((a, b) => b.createdAt - a.createdAt)
+);
+
+//storing name in localStorage
+watch(name, (newValue) => {
+  localStorage.setItem("name", newValue);
+});
+watch(
+  todos,
+  (newVal) => {
+    localStorage.setItem("todos", JSON.stringify(newVal));
+  },
+  {
+    deep: true,
+  }
+);
+//pulling values from localStorage to display
+onMounted(() => {
+  name.value = localStorage.getItem("name") || "";
+  todos.value = JSON.parse(localStorage.getItem("todos") || []);
+});
+
+//adding todo
+const addTodo = () => {
+  if (inputContent.value.trim() === "" || inputCategory.value === null) {
+    return;
+  }
+  todos.value.push({
+    content: inputContent.value,
+    category: inputCategory.value,
+    done: false,
+    createdAt: new Date().getTime(),
+  });
+  inputContent.value = "";
+  inputCategory.value = null;
+};
+const removeTodo = (todo) => {
+  todos.value = todos.value.filter((t) => t !== todo);
+};
+</script>
