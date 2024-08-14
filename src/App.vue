@@ -15,7 +15,15 @@ const todosAscending = computed(() =>
 watch(name, (newValue) => {
   localStorage.setItem("name", newValue);
 });
-
+watch(
+  todos,
+  (newVal) => {
+    localStorage.setItem("todos", JSON.stringify(newVal));
+  },
+  {
+    deep: true,
+  }
+);
 //pulling values from localStorage to display
 onMounted(() => {
   name.value = localStorage.getItem("name") || "";
@@ -33,16 +41,12 @@ const addTodo = () => {
     done: false,
     createdAt: new Date().getTime(),
   });
+  inputContent.value = "";
+  inputCategory.value = null;
 };
-watch(
-  todos,
-  (newVal) => {
-    localStorage.setItem("todos", JSON.stringify(newVal));
-  },
-  {
-    deep: true,
-  }
-);
+const removeTodo = (todo) => {
+  todos.value = todos.value.filter((t) => t !== todo);
+};
 </script>
 
 <template>
@@ -100,6 +104,10 @@ watch(
           </label>
           <div class="todo-content">
             <input type="text" v-model="todo.content" />
+          </div>
+
+          <div class="actions">
+            <button class="delete" @click="removeTodo(todo)">Delete</button>
           </div>
         </div>
       </div>
