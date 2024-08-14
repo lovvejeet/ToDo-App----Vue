@@ -8,9 +8,7 @@ const inputCategory = ref(null);
 
 //sorting todo  eg: new todo will be on top
 const todosAscending = computed(() =>
-  todos.value.sort((a, b) => {
-    return b.createdAt, a.createdAt;
-  })
+  todos.value.sort((a, b) => b.createdAt - a.createdAt)
 );
 
 //storing name in localStorage
@@ -35,16 +33,16 @@ const addTodo = () => {
     done: false,
     createdAt: new Date().getTime(),
   });
-  watch(
-    todos,
-    (newVal) => {
-      localStorage.setItem("todos", JSON.stringify(newVal));
-    },
-    {
-      deep: true,
-    }
-  );
 };
+watch(
+  todos,
+  (newVal) => {
+    localStorage.setItem("todos", JSON.stringify(newVal));
+  },
+  {
+    deep: true,
+  }
+);
 </script>
 
 <template>
